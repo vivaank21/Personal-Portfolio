@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS for loaders and effects */
+        .loader {
+            border: 4px solid #333;
+            border-top: 4px solid #00d4ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .progress-bar {
+            width: 0%;
+            height: 8px;
+            background: linear-gradient(90deg, #00d4ff, #0099cc);
+            transition: width 1s ease;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #00d4ff;
+            transform: translateX(-50%);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 1rem;
+            width: 12px;
+            height: 12px;
+            background: #00d4ff;
+            border-radius: 50%;
+            transform: translateX(-50%);
+        }
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
+        }
+        .social-icon:hover {
+            transform: scale(1.2);
+            color: #00d4ff;
+        }
+        /* Three.js canvas */
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        /* Mobile-specific tweaks */
+        @media (max-width: 640px) {
+            .timeline::before {
+                left: 20px;
+            }
+            .timeline-item::before {
+                left: 20px;
+            }
+            .timeline-item > div {
+                margin-left: 40px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans overflow-x-hidden">
+    <!-- Three.js Background -->
+    <div id="three-bg"></div>
+
+    <!-- Header/Navbar -->
+    <header id="navbar" class="fixed top-0 w-full bg-gray-900 bg-opacity-90 backdrop-blur-md z-50 transition-all duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl sm:text-2xl font-bold text-cyan-400">Vishu Kava</h1>
+            <ul class="hidden md:flex space-x-6 lg:space-x-8">
+                <li><a href="#about" class="hover:text-cyan-400 transition text-sm lg:text-base">About</a></li>
+                <li><a href="#resume" class="hover:text-cyan-400 transition text-sm lg:text-base">Resume</a></li>
+                <li><a href="#projects" class="hover:text-cyan-400 transition text-sm lg:text-base">Projects</a></li>
+                <li><a href="#contact" class="hover:text-cyan-400 transition text-sm lg:text-base">Contact</a></li>
+            </ul>
+            <button class="md:hidden text-xl" id="menu-toggle"><i class="fas fa-bars"></i></button>
+        </nav>
+        <ul id="mobile-menu" class="md:hidden hidden bg-gray-800 px-4 sm:px-6 py-4 space-y-4">
+            <li><a href="#about" class="block hover:text-cyan-400 text-sm">About</a></li>
+            <li><a href="#resume" class="block hover:text-cyan-400 text-sm">Resume</a></li>
+            <li><a href="#projects" class="block hover:text-cyan-400 text-sm">Projects</a></li>
+            <li><a href="#contact" class="block hover:text-cyan-400 text-sm">Contact</a></li>
+        </ul>
+    </header>
+
+    <!-- Hero Section (with Three.js overlay) -->
+    <section class="h-screen flex items-center justify-center relative px-4 sm:px-6">
+        <div class="text-center z-10">
+            <h2 class="text-3xl sm:text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Welcome</h2>
+            <p class="text-lg sm:text-xl md:text-2xl mb-8">Backend Developer | Application Developer</p>
+            <a href="#about" class="bg-cyan-500 hover:bg-cyan-600 px-6 sm:px-8 py-3 rounded-full transition text-sm sm:text-base">Explore</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-12 sm:py-20 px-4 sm:px-6">
+        <div class="container mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-8 sm:mb-12 text-center">About Me</h2>
+            <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
+                <div>
+                    <p class="text-base sm:text-lg mb-6">Enthusiastic front-end and back-end
+developer fresher with hands-on project
+experience using JavaScript, PHP, C#.NET,
+and SQL. Strong problem solver who writes
+clean, tested code and learns fast. Excited to
+join a team, bui;d user-friendly features, and
+grow into a reliable contributor</p>
+                    <p class="text-base sm:text-lg">Short bio: Currently studing at H.J. Doshi IT Institute, Jamnagar | SSC and HSC passed from Kendriya Vidyalaya </p>
+                </div>
+                <div>
+                    <h3 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Skills</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <span class="block mb-2 text-sm sm:text-base">HTML/CSS/JavaScript</span>
+                            <div class="bg-gray-700 rounded-full h-2"><div class="progress-bar" style="width: 85%;"></div></div>
+                        </div>
+                        <div>
+                            <span class="block mb-2 text-sm sm:text-base">PHP</span>
+                            <div class="bg-gray-700 rounded-full h-2"><div class="progress-bar" style="width: 90%;"></div></div>
+                        </div>
+                        <div>
+                            <span class="block mb-2 text-sm sm:text-base">C#</span>
+                            <div class="bg-gray-700 rounded-full h-2"><div class="progress-bar" style="width: 85%;"></div></div>
+                        </div>
+                        <div>
+                            <span class="block mb-2 text-sm sm:text-base">Kotlin</span>
+                            <div class="bg-gray-700 rounded-full h-2"><div class="progress-bar" style="width: 60%;"></div></div>
+                        </div>
+                         <div>
+                            <span class="block mb-2 text-sm sm:text-base">Core java</span>
+                            <div class="bg-gray-700 rounded-full h-2"><div class="progress-bar" style="width: 70%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 sm:mt-12">
+                <h3 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Experience Timeline</h3>
+                <div class="timeline relative">
+                    <!-- <div class="timeline-item">
+                        <div class="md:ml-8">
+                            <h4 class="text-lg sm:text-xl font-bold">Frontend Developer at ABC Corp</h4>
+                            <p class="text-cyan-400 text-sm sm:text-base">2020 - Present</p>
+                            <p class="text-sm sm:text-base">Developed responsive web apps using React and Three.js.</p>
+                        </div>
+                    </div> -->
+                    <div class="timeline-item">
+                        <div class="md:ml-8">
+                            <h4 class="text-lg sm:text-xl font-bold">Intern at Onedevhub Technologies</h4>
+                            <p class="text-cyan-400 text-sm sm:text-base">2026 - Present</p>
+                            <p class="text-sm sm:text-base">Backend Developer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resume Section -->
+    <section id="resume" class="py-12 sm:py-20 px-4 sm:px-6 bg-gray-800">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-8 sm:mb-12">Resume</h2>
+            <button class="bg-cyan-500 hover:bg-cyan-600 px-6 sm:px-8 py-3 rounded-full transition text-sm sm:text-base" onclick="window.open('../assets/Resume.pdf', '_blank')">View Resume</button>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-12 sm:py-20 px-4 sm:px-6">
+        <div class="container mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-8 sm:mb-12 text-center">Projects</h2>
+            <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <div class="project-card bg-gray-800 p-4 sm:p-6 rounded-lg transition-all duration-300">
+                    <h3 class="text-lg sm:text-2xl font-bold mb-4">Weather Site</h3>
+                    <p class="mb-4 text-sm sm:text-base">A dynamic weather web app created using HTML, CSS, and vanilla JavaScript, integrated with a REST Weather API to fetch and display live weather data such as temperature, humidity, and wind speed.</p>
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                        <a href="https://weather-app-live-two.vercel.app/" class="bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition text-center text-sm">Live Demo</a>
+                        <a href="https://github.com/vivaank21/weather-app.git" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded transition text-center text-sm">Source Code</a>
+                    </div>
+                </div>
+                <div class="project-card bg-gray-800 p-4 sm:p-6 rounded-lg transition-all duration-300">
+                    <h3 class="text-lg sm:text-2xl font-bold mb-4">Billing Software</h3>
+                    <p class="mb-4 text-sm sm:text-base">A robust billing system developed using C# (.NET Framework) integrated with SQL Server for reliable data management, supporting invoice generation, customer records, and transaction tracking.</p>
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                        <!-- <a href="#" class="bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition text-center text-sm">Live Demo</a> -->
+                        <a href="#" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded transition text-center text-sm">Source Code</a>
+                    </div>
+                </div>
+                <div class="project-card bg-gray-800 p-4 sm:p-6 rounded-lg transition-all duration-300">
+                    <h3 class="text-lg sm:text-2xl font-bold mb-4">Chocolate Site</h3>
+                    <p class="mb-4 text-sm sm:text-base">E-commerce site with modern UI and micro-interactions.</p>
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                        <a href="#" class="bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition text-center text-sm">Live Demo</a>
+                        <a href="#" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded transition text-center text-sm">Source Code</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-12 sm:py-20 px-4 sm:px-6 bg-gray-800">
+        <div class="container mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-8 sm:mb-12 text-center">Contact</h2>
+            <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
+                <form class="space-y-4 sm:space-y-6">
+                    <input type="text" placeholder="Name" class="w-full p-3 bg-gray-700 rounded text-sm sm:text-base">
+                    <input type="email" placeholder="Email" class="w-full p-3 bg-gray-700 rounded text-sm sm:text-base">
+                    <textarea placeholder="Message" rows="5" class="w-full p-3 bg-gray-700 rounded text-sm sm:text-base"></textarea>
+                    <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 px-6 sm:px-8 py-3 rounded-full transition text-sm sm:text-base">Send Message</button>
+                </form>
+                <div>
+                    <p class="mb-6 text-sm sm:text-base">Email: vishukava16@gmail.com</p>
+                    <div class="flex space-x-4 sm:space-x-6">
+                        <a href="https://www.linkedin.com/in/vishu-kava" class="social-icon text-xl sm:text-2xl transition"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-icon text-xl sm:text-2xl transition"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Animate sections on scroll
+        gsap.utils.toArray('section').forEach(section => {
+            gsap.from(section, {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+        });
+
+        // Animate progress bars
+        gsap.utils.toArray('.progress-bar').forEach(bar => {
+            gsap.to(bar, {
+                width: bar.style.width,
+                scrollTrigger: {
+                    trigger: bar,
+                    start: 'top 80%'
+                }
+            });
+        });
+
+       // Three.js Background
+const container = document.getElementById('three-bg');
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+
+const renderer = new THREE.WebGLRenderer({
+  alpha: true,
+  antialias: true
+});
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+container.appendChild(renderer.domElement);
+
+// Particles
+const particlesGeometry = new THREE.BufferGeometry();
+const particlesCount = 1000;
+const posArray = new Float32Array(particlesCount * 3);
+
+for (let i = 0; i < posArray.length; i++) {
+  posArray[i] = (Math.random() - 0.5) * 5;
+}
+
+particlesGeometry.setAttribute(
+  'position',
+  new THREE.BufferAttribute(posArray, 3)
+);
+
+const particlesMaterial = new THREE.PointsMaterial({
+  color: 0x00d4ff,
+  size: 0.01
+});
+
+const particlesMesh = new THREE.Points(
+  particlesGeometry,
+  particlesMaterial
+);
+
+scene.add(particlesMesh);
+camera.position.z = 3;
+
+function animate() {
+  requestAnimationFrame(animate);
+  particlesMesh.rotation.y += 0.0008;
+  particlesMesh.rotation.x += 0.0005;
+  renderer.render(scene, camera);
+}
+
+animate();
+
+// Resize
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+    </script>
+</body>
+</html>
